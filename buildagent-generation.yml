@@ -28,18 +28,19 @@ jobs:
   pool: 
     name: ${{ parameters.agent_pool }}
 
-  steps:    
-  - script: |
-      @echo off
-      SET DIR=%~dp0%
-      ::download install.ps1
-      %systemroot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "((new-object net.webclient).DownloadFile('https://chocolatey.org/install.ps1','%DIR%install.ps1'))"
-      ::run installer
-      %systemroot%\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& '%DIR%install.ps1' %*"
-      choco install packer
+  steps:      
+  - powershell: -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+    displayName: 'Install chocolatey'
+
+  - powershell: choco install packer
+    displayName: 'Install packer'
+
+  - script: |      
       rmdir /s /q virtual-environments
       git clone https://github.com/actions/virtual-environments.git
     displayName: 'Clone the GitHub repository'
+
+ 
 
   - task: PowerShell@2
     name: setVars
