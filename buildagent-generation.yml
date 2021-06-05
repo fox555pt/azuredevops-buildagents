@@ -47,6 +47,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        if($Env:path.Contains("C:\ProgramData\chocolatey\bin") -ne 0){$Env:path+=";C:\ProgramData\chocolatey\bin"}
         $ResourcesNamePrefix = "$(Build.BuildId)"
         $ImageType = "${{ parameters.image_type }}"
         $TemplateDirectoryName = if ($ImageType.StartsWith("ubuntu")) { "linux" } else { "win" }
