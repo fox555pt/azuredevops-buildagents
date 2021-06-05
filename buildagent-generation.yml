@@ -30,6 +30,7 @@ jobs:
 
   steps:    
   - script: |
+      rmdir /s virtual-environments
       git clone https://github.com/actions/virtual-environments.git
     displayName: 'Clone the GitHub repository'
 
